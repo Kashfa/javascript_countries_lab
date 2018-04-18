@@ -35,15 +35,31 @@ const populateDropdown = function (countries) {
 }
 
 const getCountryInfo = function (event) {
-  const ul = document.querySelector('#country-list');
+  const div = document.querySelector('#country-info');
+  showCountryInfo(countries[this.value], div)
+  const bordersTitle = document.createElement('h3');
+  bordersTitle.textContent = 'Bordering countries';
+  div.appendChild(bordersTitle);
+  countries[this.value].borders.forEach(border => {
+    countries.forEach(country => {
+      if(country.alpha3Code === border) {
+        showCountryInfo(country, div);
+      }
+    });
+  });
+}
+
+const showCountryInfo = function (country, div) {
+  const ul = document.createElement('ul');
   ul.innerHTML = '';
+  div.appendChild(ul);
   const countryName = document.createElement('li');
-  countryName.textContent = `${countries[this.value].name}`;
+  countryName.textContent = `${country.name}`;
   ul.appendChild(countryName);
   const countryPopulation = document.createElement('li');
-  countryPopulation.textContent = `Population: ${countries[this.value].population}`;
+  countryPopulation.textContent = `Population: ${country.population}`;
   ul.appendChild(countryPopulation);
   const countryCapital = document.createElement('li');
-  countryCapital.textContent = `Capital: ${countries[this.value].capital}`;
+  countryCapital.textContent = `Capital: ${country.capital}`;
   ul.appendChild(countryCapital);
 }
