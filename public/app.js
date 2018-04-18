@@ -36,9 +36,15 @@ const populateDropdown = function (countries) {
 
 const getCountryInfo = function (event) {
   const div = document.querySelector('#country-info');
-  showCountryInfo(countries[this.value], div)
+  div.innerHTML = '';
+
+  showCountryInfo(countries[this.value], div);
+
+  showMap(countries[this.value], div);
+
   const bordersTitle = document.createElement('h3');
   bordersTitle.textContent = 'Bordering countries';
+
   div.appendChild(bordersTitle);
   countries[this.value].borders.forEach(border => {
     countries.forEach(country => {
@@ -51,15 +57,36 @@ const getCountryInfo = function (event) {
 
 const showCountryInfo = function (country, div) {
   const ul = document.createElement('ul');
-  ul.innerHTML = '';
-  div.appendChild(ul);
   const countryName = document.createElement('li');
-  countryName.textContent = `${country.name}`;
-  ul.appendChild(countryName);
   const countryPopulation = document.createElement('li');
-  countryPopulation.textContent = `Population: ${country.population}`;
-  ul.appendChild(countryPopulation);
   const countryCapital = document.createElement('li');
+  const countryFlag = document.createElement('li');
+  const flagImage = document.createElement('img');
+
+  countryName.textContent = `${country.name}`;
+  countryPopulation.textContent = `Population: ${country.population}`;
   countryCapital.textContent = `Capital: ${country.capital}`;
+  flagImage.src = country.flag;
+  flagImage.width = 20;
+
+  div.appendChild(ul);
+  ul.appendChild(countryName);
+  ul.appendChild(countryPopulation);
   ul.appendChild(countryCapital);
+  ul.appendChild(countryFlag);
+  countryFlag.appendChild(flagImage);
+}
+
+const showMap = function (country, div) {
+  const mapContainer = document.createElement('div');
+  mapContainer.id = "map-container";
+  div.appendChild(mapContainer);
+
+  const lat = country.latlng[0];
+  const lng = country.latlng[1];
+
+  const center = {lat: lat, lng: lng};
+  const mainMap = new MapWrapper(mapContainer, center, 6);
+
+  mainMap.addMarker(center);
 }
